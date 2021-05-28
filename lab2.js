@@ -124,12 +124,9 @@ db.orders.aggregate([
     {$unwind: "$items"},
     {$group: {
         _id: "$items.product",
-        totalSold: {$sum: "$items.count"},
-        
-    }},
-    {$project: {
-        total: {$multiply: ["$totalSold", "$items.price"]}
-    }}
-        
+        revenue: {$sum: {$multiply: ["$items.count", "$items.price"]}}, 
+    }},   
+    {$sort: {revenue: -1}} ,
+    {$limit: 1}
 ])
 
